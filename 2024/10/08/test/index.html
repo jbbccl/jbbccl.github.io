@@ -14,7 +14,7 @@
 <meta property="og:description" content="##系统unbuntu22.4.4（虚拟机） nodejs 20.18.0 npm 10.8.2 安装nodejs因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装node下载后重命名为nodejs 并解压到&#x2F;usr&#x2F;local&#x2F;lib下创建连接 12root@lo:&#x2F;usr&#x2F;lib&#x2F;environment.d# ln -s  &#x2F;usr&#x2F;local">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-10-08T10:23:59.000Z">
-<meta property="article:modified_time" content="2024-10-08T11:19:08.385Z">
+<meta property="article:modified_time" content="2024-10-08T11:20:47.436Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -115,7 +115,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;名&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;注册的邮箱&quot;</span></span><br><span class="line">ssh -T git@githubcom -i ~/.ssh/githubkey</span><br></pre></td></tr></table></figure>
 <p>连接成功则没问题</p>
 <p>编辑blog下的_config.yml</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:用户名/用户名.github.io.git</span><br><span class="line">  # example, https://github.com/hexojs/hexojs.github.io</span><br><span class="line">  branch: gh-pages</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:用户名/用户名.github.io.git</span><br><span class="line">  # example, https://github.com/hexojs/hexojs.github.io</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
 
 <p>参考文档中的一键部署<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/github-pages">hexo</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo clean &amp;&amp; hexo deploy</span><br></pre></td></tr></table></figure>
@@ -146,10 +146,11 @@
 
 
 
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/08/test/" data-id="cm20cmoug0001556g5exg0hmz" data-title="hexo github搭建博客" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/10/08/test/" data-id="cm20d4tl20000e06g45u12b2q" data-title="hexo github搭建博客" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -160,9 +161,9 @@
 <nav id="article-nav">
   
   
-    <a href="/2024/10/08/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2024/10/08/vm/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Hello World</div>
+      <div class="article-nav-title">虚拟机安装ubuntu22.04</div>
     </a>
   
 </nav>
@@ -204,7 +205,7 @@
           </li>
         
           <li>
-            <a href="/2024/10/08/hello-world/">Hello World</a>
+            <a href="/2024/10/08/vm/">虚拟机安装ubuntu22.04</a>
           </li>
         
       </ul>
