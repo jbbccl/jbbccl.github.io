@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>test | Hexo</title>
+  <title>hexo github搭建博客 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="##Test">
+  <meta name="description" content="##系统unbuntu22.4.4（虚拟机） nodejs 20.18.0 npm 10.8.2 安装nodejs因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装node下载后重命名为nodejs 并解压到&#x2F;usr&#x2F;local&#x2F;lib下创建连接 12root@lo:&#x2F;usr&#x2F;lib&#x2F;environment.d# ln -s  &#x2F;usr&#x2F;local">
 <meta property="og:type" content="article">
-<meta property="og:title" content="test">
+<meta property="og:title" content="hexo github搭建博客">
 <meta property="og:url" content="http://example.com/2024/10/08/test/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="##Test">
+<meta property="og:description" content="##系统unbuntu22.4.4（虚拟机） nodejs 20.18.0 npm 10.8.2 安装nodejs因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装node下载后重命名为nodejs 并解压到&#x2F;usr&#x2F;local&#x2F;lib下创建连接 12root@lo:&#x2F;usr&#x2F;lib&#x2F;environment.d# ln -s  &#x2F;usr&#x2F;local">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-10-08T10:23:59.000Z">
-<meta property="article:modified_time" content="2024-10-08T10:24:11.354Z">
+<meta property="article:modified_time" content="2024-10-08T11:03:40.908Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -85,7 +85,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      test
+      hexo github搭建博客
     </h1>
   
 
@@ -93,12 +93,62 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>##Test</p>
+        <p>##系统unbuntu22.4.4（虚拟机） nodejs 20.18.0 npm 10.8.2</p>
+<h3 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装nodejs</h3><h5 id="因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装"><a href="#因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装" class="headerlink" title="因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装"></a>因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装</h5><p><a target="_blank" rel="noopener" href="https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-x64.tar.xz">node</a><br>下载后重命名为nodejs 并解压到&#x2F;usr&#x2F;local&#x2F;lib下<br>创建连接</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@lo:/usr/lib/environment.d# <span class="built_in">ln</span> -s  /usr/local/lib/nodejs/bin/npm /usr/bin</span><br><span class="line">root@lo:/usr/lib/environment.d# <span class="built_in">ln</span> -s  /usr/local/lib/nodejs/bin/node /usr/bin</span><br></pre></td></tr></table></figure>
+
+<p>执行node确认后安装hexo客户端</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> npm install -g hexo-cli --registry https://registry.npmmirror.com</span><br></pre></td></tr></table></figure>
+
+<p>然后为hexo创建连接</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">ln</span> -s /usr/local/lib/nodejs/lib/node_modules/hexo-cli/bin/hexo /usr/local/bin</span><br></pre></td></tr></table></figure>
+
+<p>创建blog并安装hexo-deployer-git插件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p>hexo s在本地打开服务</p>
+<p>##部署到github</p>
+<p>####本地准备ssh</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install ssh git</span><br><span class="line">ss-keygen -t ed25519 <span class="comment">#创建密钥对于~/.ssh/下 </span></span><br><span class="line"><span class="comment">#执行后第一个要求输入的是文件名这里用githubkey，第二个是密码（密钥泄漏的保障，可不填）</span></span><br><span class="line"><span class="comment">#~/.ssh/githubkey.pub内容备用</span></span><br></pre></td></tr></table></figure>
+
+<p>-登陆github创建仓库，名为name.github.io<br>-点击设置，找到 SSH and GPG keys 点add ssh keys<br>-将~&#x2F;.ssh&#x2F;githubkey.pub的内容全部复制到那个大框里，命名再点add SSH key</p>
+<p>在本地终端</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;名&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;注册的邮箱&quot;</span></span><br><span class="line">ssh -T git@githubcom -i ~/.ssh/githubkey</span><br></pre></td></tr></table></figure>
+<p>连接成功则没问题</p>
+<p>编辑blog下的_config.yml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:用户名/用户名.github.io.git</span><br><span class="line">  # example, https://github.com/hexojs/hexojs.github.io</span><br><span class="line">  branch: gh-pages</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">	</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/08/test/" data-id="cm20ancp40001aw6gasum9yjq" data-title="test" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/10/08/test/" data-id="cm20c2g5f0001y76gfmzpdjx2" data-title="hexo github搭建博客" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -149,7 +199,7 @@
       <ul>
         
           <li>
-            <a href="/2024/10/08/test/">test</a>
+            <a href="/2024/10/08/test/">hexo github搭建博客</a>
           </li>
         
           <li>
