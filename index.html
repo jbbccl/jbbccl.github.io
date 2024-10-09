@@ -91,8 +91,7 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>##系统unbuntu22.4.4（虚拟机） nodejs 20.18.0 npm 10.8.2</p>
-<h3 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装nodejs</h3><h5 id="因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装"><a href="#因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装" class="headerlink" title="因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装"></a>因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装</h5><p><a target="_blank" rel="noopener" href="https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-x64.tar.xz">node</a><br>下载后重命名为nodejs 并解压到&#x2F;usr&#x2F;local&#x2F;lib下<br>创建连接</p>
+        <h3 id="系统unbuntu22-4-4（虚拟机）-nodejs-20-18-0-npm-10-8-2"><a href="#系统unbuntu22-4-4（虚拟机）-nodejs-20-18-0-npm-10-8-2" class="headerlink" title="系统unbuntu22.4.4（虚拟机） nodejs 20.18.0 npm 10.8.2"></a>系统unbuntu22.4.4（虚拟机） nodejs 20.18.0 npm 10.8.2</h3><h4 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装nodejs</h4><h5 id="因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装"><a href="#因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装" class="headerlink" title="因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装"></a>因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装</h5><p><a target="_blank" rel="noopener" href="https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-x64.tar.xz">node</a><br>下载后重命名为nodejs 并解压到&#x2F;usr&#x2F;local&#x2F;lib下<br>创建连接</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@lo:/usr/lib/environment.d# <span class="built_in">ln</span> -s  /usr/local/lib/nodejs/bin/npm /usr/bin</span><br><span class="line">root@lo:/usr/lib/environment.d# <span class="built_in">ln</span> -s  /usr/local/lib/nodejs/bin/node /usr/bin</span><br></pre></td></tr></table></figure>
 
 <p>执行node确认后安装hexo客户端</p>
@@ -104,11 +103,13 @@
 <p>创建blog并安装hexo-deployer-git插件</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
 <p>hexo s在本地打开服务</p>
-<p>##部署到github</p>
-<p>####本地准备ssh</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install ssh git</span><br><span class="line">ss-keygen -t ed25519 <span class="comment">#创建密钥对于~/.ssh/下 </span></span><br><span class="line"><span class="comment">#执行后第一个要求输入的是文件名这里用githubkey，第二个是密码（密钥泄漏的保障，可不填）</span></span><br><span class="line"><span class="comment">#~/.ssh/githubkey.pub内容备用</span></span><br></pre></td></tr></table></figure>
+<h4 id="部署到github"><a href="#部署到github" class="headerlink" title="部署到github"></a>部署到github</h4><h5 id="本地准备ssh"><a href="#本地准备ssh" class="headerlink" title="本地准备ssh"></a>本地准备ssh</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install ssh git</span><br><span class="line">ss-keygen -t ed25519 <span class="comment">#创建密钥对于~/.ssh/下 </span></span><br><span class="line"><span class="comment">#执行后第一个要求输入的是文件名这里用githubkey，第二个是密码（密钥泄漏的保障，可不填）</span></span><br><span class="line"><span class="comment">#~/.ssh/githubkey.pub内容备用</span></span><br></pre></td></tr></table></figure>
 
-<p>-登陆github创建仓库，名为name.github.io<br>-点击设置，找到 SSH and GPG keys 点add ssh keys<br>-将~&#x2F;.ssh&#x2F;githubkey.pub的内容全部复制到那个大框里，命名再点add SSH key</p>
+<ul>
+<li>登陆github创建仓库，名为name.github.io</li>
+<li>点击设置，找到 SSH and GPG keys 点add ssh keys</li>
+<li>将~&#x2F;.ssh&#x2F;githubkey.pub的内容全部复制到那个大框里，命名再点add SSH key</li>
+</ul>
 <p>在本地终端</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;名&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;注册的邮箱&quot;</span></span><br><span class="line">ssh -T git@githubcom -i ~/.ssh/githubkey</span><br></pre></td></tr></table></figure>
 <p>连接成功则没问题</p>
@@ -117,12 +118,12 @@
 
 <p>参考文档中的一键部署<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/github-pages">hexo</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo clean &amp;&amp; hexo deploy</span><br></pre></td></tr></table></figure>
-<p>访问名字.github.io<br>#…需要一段时间才会更新</p>
-
+<p>访问名字.github.io</p>
+<h1 id="…需要一段时间才会更新"><a href="#…需要一段时间才会更新" class="headerlink" title="…需要一段时间才会更新"></a>…需要一段时间才会更新</h1>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/08/test/" data-id="cm20dzyhl0000kw6g6q1k2peq" data-title="hexo github搭建博客" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/10/08/test/" data-id="cm21prwtg0000cc6gep4lgytt" data-title="hexo github搭建博客" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -156,12 +157,17 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>##win10下 虚拟机安装ubuntu22.04<br>下载vm<a href="softwareupdate.vmware.com/cds/vmw-desktop/ws">下载</a><br>-打开vm17安装包安装<br>-选择个人版，添加虚拟机，选自定义，选择ubuntu…..iso<br>-由于vm强制简易安装 ，创建完成后要先退出安装，再安装以便设置中文<br>###安装完成，菜单里-虚拟机-拍摄快照</p>
-
+        <h4 id="win10下-虚拟机安装ubuntu22-04"><a href="#win10下-虚拟机安装ubuntu22-04" class="headerlink" title="win10下 虚拟机安装ubuntu22.04"></a>win10下 虚拟机安装ubuntu22.04</h4><p>下载vm<a href="softwareupdate.vmware.com/cds/vmw-desktop/ws">下载</a></p>
+<ul>
+<li>打开vm17安装包安装</li>
+<li>选择个人版，添加虚拟机，选自定义，选择ubuntu…..iso</li>
+<li>由于vm强制简易安装 ，创建完成后要先退出安装，再安装以便设置中文</li>
+</ul>
+<h3 id="安装完成，菜单里-虚拟机-拍摄快照"><a href="#安装完成，菜单里-虚拟机-拍摄快照" class="headerlink" title="安装完成，菜单里-虚拟机-拍摄快照"></a>安装完成，菜单里-虚拟机-拍摄快照</h3>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/08/vm/" data-id="cm20dzyhp0001kw6g68ja3njy" data-title="虚拟机安装ubuntu22.04" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/10/08/vm/" data-id="cm21prwtj0001cc6g3xsq6vt4" data-title="虚拟机安装ubuntu22.04" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
