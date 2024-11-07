@@ -34,17 +34,17 @@
 <li>下载cmake </li>
 <li>环境变量-系统变量-path下添加绝对路经 &#x2F;mingw64&#x2F;bin &#x2F;cmake&#x2F;bin</li>
 <li>vscode打开cpp文件，根据提示安装插件</li>
-<li>Code打开空文件夹<br><img src="/../img/ipv6connecttool/1.png" alt="试试图片"></li>
-<li>命令面板cmake quick start<br><img src="/../img/ipv6connecttool/2.png" alt="试试图片"><br><img src="/../img/ipv6connecttool/3.png" alt="试试图片"></li>
+<li>Code打开空文件夹<br><img src="/../img/ipv6connecttool/1.jpg" alt="试试图片"></li>
+<li>命令面板cmake quick start<br><img src="/../img/ipv6connecttool/2.jpg" alt="试试图片"><br><img src="/../img/ipv6connecttool/3.jpg" alt="试试图片"></li>
 </ul>
 <ul>
 <li>输入项目名称</li>
 <li>创建可执行文件</li>
 <li>不勾选支持</li>
-<li>选择添加新预设，从编译器创建<em>一定要为预设添加名字</em><br><img src="/../img/ipv6connecttool/4.png" alt="试试图片"></li>
+<li>选择添加新预设，从编译器创建<em>一定要为预设添加名字</em><br><img src="/../img/ipv6connecttool/4.jpg" alt="试试图片"></li>
 </ul>
 <ul>
-<li>不能F5执行，点终端下面(最底部)的生成 或debug<br><img src="/../img/ipv6connecttool/5.png" alt="试试图片"></li>
+<li>不能F5执行，点终端下面(最底部)的生成 或debug<br><img src="/../img/ipv6connecttool/5.jpg" alt="试试图片"></li>
 </ul>
 <figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.5</span>.<span class="number">0</span>)</span><br><span class="line"><span class="keyword">project</span>(asocket)<span class="comment">#项目名</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_STANDARD <span class="number">17</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_EXE_LINKER_FLAGS <span class="string">&quot;-static-libgcc -static-libstdc++&quot;</span>)</span><br><span class="line"><span class="keyword">link_libraries</span>(ws2_32)</span><br><span class="line"><span class="keyword">add_executable</span>(asocket main.cpp)</span><br></pre></td></tr></table></figure>
 
@@ -179,17 +179,6 @@ syntax to use near '');-- ") LIMIT 0,1' at line 1
       </tags>
   </entry>
   <entry>
-    <title>v-for中控制特定元素</title>
-    <url>/2024/11/07/v-for%E4%B8%AD%E6%8E%A7%E5%88%B6%E7%89%B9%E5%AE%9A%E5%85%83%E7%B4%A0/</url>
-    <content><![CDATA[<p>可以用:ref给元素绑定唯一值，再用<br>const domElement &#x3D; this.$refs[refName];获取元素</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;file_list_item&quot;</span> <span class="attr">v-for</span>=<span class="string">&quot;(file,obj_key) in file_list&quot;</span> <span class="attr">:key</span>=<span class="string">&quot;obj_key&quot;</span> <span class="attr">:ref</span>=<span class="string">&quot;`idx-$&#123;obj_key&#125;`&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;flex_row&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">&quot;removeCom(obj_key)&quot;</span> <span class="attr">id</span>=<span class="string">&quot;removecom&quot;</span>&gt;</span>X<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;filename&quot;</span>&gt;</span>&#123;&#123; file.name &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">auplfile</span> <span class="attr">:file</span>=<span class="string">&quot;file&quot;</span> <span class="attr">:key</span>=<span class="string">&quot;obj_key&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h4 id="v-for-”-file-obj-key-in-file-list”-中的file-list最好是对象"><a href="#v-for-”-file-obj-key-in-file-list”-中的file-list最好是对象" class="headerlink" title="v-for&#x3D;”(file,obj_key) in file_list” 中的file_list最好是对象"></a>v-for&#x3D;”(file,obj_key) in file_list” 中的file_list最好是对象</h4><p>因为<li v-for="(value, key, index) in myObject">再遍历对象时，()中第二个变量是对象的key<br>如果file_list是数组，再删除数组中的某个值后，后面v-for生成的元素会依次顶替上来，造成refName不唯一<br>数组 0 1 2 3 4 删除3 &#x3D;&gt; 0 1 2 3 4<br>对象 ‘0’ ‘1’ ‘2’ ‘3’  删除’1’ &#x3D;&gt; ‘0’ ‘2’ ‘3’ </p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">removeCom</span>(<span class="params">index</span>)&#123;</span><br><span class="line">  <span class="keyword">const</span> e_idx = <span class="variable language_">this</span>.<span class="property">$refs</span>[<span class="string">`idx-<span class="subst">$&#123;index&#125;</span>`</span>];</span><br><span class="line">  e_idx[<span class="number">0</span>].<span class="property">style</span>.<span class="property">height</span>=<span class="string">&#x27;0px&#x27;</span></span><br><span class="line">   <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">delete</span> <span class="variable language_">this</span>.<span class="property">file_list</span>[index]</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">file_list</span>)</span><br><span class="line">  &#125;, <span class="number">450</span>); </span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>]]></content>
-      <tags>
-        <tag>vue3</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>hexo github搭建博客</title>
     <url>/2024/10/08/test/</url>
     <content><![CDATA[<h3 id="系统unbuntu22-4-4（虚拟机）-nodejs-20-18-0-npm-10-8-2"><a href="#系统unbuntu22-4-4（虚拟机）-nodejs-20-18-0-npm-10-8-2" class="headerlink" title="系统unbuntu22.4.4（虚拟机） nodejs 20.18.0 npm 10.8.2"></a>系统unbuntu22.4.4（虚拟机） nodejs 20.18.0 npm 10.8.2</h3><h4 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装nodejs</h4><h5 id="因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装"><a href="#因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装" class="headerlink" title="因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装"></a>因为apt安装的nodejs版本低于hexo要求，所以用预编译版本安装</h5><p><a href="https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-x64.tar.xz">node</a><br>下载后重命名为nodejs 并解压到&#x2F;usr&#x2F;local&#x2F;lib下<br>创建连接</p>
@@ -228,6 +217,17 @@ syntax to use near '');-- ") LIMIT 0,1' at line 1
       <tags>
         <tag>deb</tag>
         <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>v-for中控制特定元素</title>
+    <url>/2024/11/07/v-for%E4%B8%AD%E6%8E%A7%E5%88%B6%E7%89%B9%E5%AE%9A%E5%85%83%E7%B4%A0/</url>
+    <content><![CDATA[<p>可以用:ref给元素绑定唯一值，再用<br>const domElement &#x3D; this.$refs[refName];获取元素</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;file_list_item&quot;</span> <span class="attr">v-for</span>=<span class="string">&quot;(file,obj_key) in file_list&quot;</span> <span class="attr">:key</span>=<span class="string">&quot;obj_key&quot;</span> <span class="attr">:ref</span>=<span class="string">&quot;`idx-$&#123;obj_key&#125;`&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;flex_row&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">&quot;removeCom(obj_key)&quot;</span> <span class="attr">id</span>=<span class="string">&quot;removecom&quot;</span>&gt;</span>X<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;filename&quot;</span>&gt;</span>&#123;&#123; file.name &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">auplfile</span> <span class="attr">:file</span>=<span class="string">&quot;file&quot;</span> <span class="attr">:key</span>=<span class="string">&quot;obj_key&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="v-for-”-file-obj-key-in-file-list”-中的file-list最好是对象"><a href="#v-for-”-file-obj-key-in-file-list”-中的file-list最好是对象" class="headerlink" title="v-for&#x3D;”(file,obj_key) in file_list” 中的file_list最好是对象"></a>v-for&#x3D;”(file,obj_key) in file_list” 中的file_list最好是对象</h4><p>因为<li v-for="(value, key, index) in myObject">再遍历对象时，()中第二个变量是对象的key<br>如果file_list是数组，再删除数组中的某个值后，后面v-for生成的元素会依次顶替上来，造成refName不唯一<br>数组 0 1 2 3 4 删除3 &#x3D;&gt; 0 1 2 3 4<br>对象 ‘0’ ‘1’ ‘2’ ‘3’  删除’1’ &#x3D;&gt; ‘0’ ‘2’ ‘3’ </p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">removeCom</span>(<span class="params">index</span>)&#123;</span><br><span class="line">  <span class="keyword">const</span> e_idx = <span class="variable language_">this</span>.<span class="property">$refs</span>[<span class="string">`idx-<span class="subst">$&#123;index&#125;</span>`</span>];</span><br><span class="line">  e_idx[<span class="number">0</span>].<span class="property">style</span>.<span class="property">height</span>=<span class="string">&#x27;0px&#x27;</span></span><br><span class="line">   <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">delete</span> <span class="variable language_">this</span>.<span class="property">file_list</span>[index]</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">file_list</span>)</span><br><span class="line">  &#125;, <span class="number">450</span>); </span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>vue3</tag>
       </tags>
   </entry>
   <entry>
