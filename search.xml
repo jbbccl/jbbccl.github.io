@@ -456,6 +456,43 @@ Your Password:3
       </tags>
   </entry>
   <entry>
+    <title>upload-labs-1到5</title>
+    <url>/2024/12/07/upload-labs/upload-labs-1_5/</url>
+    <content><![CDATA[<h2 id="搭建upload-labs"><a href="#搭建upload-labs" class="headerlink" title="搭建upload-labs"></a>搭建upload-labs</h2><p>kali下使用docker搭建</p>
+<ul>
+<li>安装docker<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update&amp;&amp;<span class="built_in">sudo</span> apt upgrade -y</span><br><span class="line"><span class="built_in">sudo</span> apt install docker.io</span><br><span class="line">service docker start</span><br></pre></td></tr></table></figure></li>
+<li>拉取镜像并在80端口启动<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull c0ny1/upload-labs</span><br><span class="line"><span class="built_in">sudo</span> docker images</span><br><span class="line"><span class="built_in">sudo</span> docker run -d -p 80:80 c0ny1/upload-labs </span><br><span class="line"><span class="comment">#没有upload文件，手动创建并授权</span></span><br><span class="line"><span class="built_in">sudo</span> docker ps</span><br><span class="line"><span class="built_in">sudo</span> docker <span class="built_in">exec</span> -it &#123;upload-labs 的 CONTAINER ID&#125; /bin/bash</span><br><span class="line"><span class="built_in">mkdir</span> upload</span><br><span class="line"><span class="built_in">chmod</span> 777 upload</span><br></pre></td></tr></table></figure></li>
+<li>查看运行中的镜像，选择并关闭<figure class="highlight zsh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker ps</span><br><span class="line"><span class="built_in">sudo</span> docker stop &#123;CONTAINER ID&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="pass-1"><a href="#pass-1" class="headerlink" title="pass-1"></a>pass-1</h2><p>第一关使用储存在前端的js过滤文件，直接审查元素改js脚本不起作用。<br>因为浏览器已经加载脚本到内存中了，需要抓包修改响应，<del>或添加覆盖脚本</del></p>
+<h4 id="抓包修改响应"><a href="#抓包修改响应" class="headerlink" title="抓包修改响应"></a>抓包修改响应</h4><p>brup suit 开启抓包 intercept on，<br>刷新页面，抓到的请求后，点action-&gt;do intercept-&gt; response to this resquest<br><img src="/../../img/upload-labs/1.1.png" alt="试试图片" loading="lazy"><br>新版直接右键抓到的条目-&gt;do intercept-&gt;...<br>forward 抓到响应包，修改js，再forward</p>
+<h4 id="尝试"><a href="#尝试" class="headerlink" title="尝试"></a>尝试</h4><p>php添加不了覆盖脚本，试试暴力猴添加用户脚本删除dom tree</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementsByTagName</span>(<span class="string">&#x27;script&#x27;</span>)[<span class="number">5</span>].<span class="title function_">remove</span>()</span><br></pre></td></tr></table></figure>
+<p>然而并不行。</p>
+<ul>
+<li>onsubmit属性在return false时不提交请求<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">form enctype=&quot;multipart/form-data&quot; method=&quot;post&quot; onsubmit=&quot;return checkFile()&quot;&gt;</span><br></pre></td></tr></table></figure>
+onsubmit&#x3D;&quot;return checkFile()&quot;改为onsubmit&#x3D;&quot;return true&quot;</li>
+</ul>
+<h2 id="pass-2"><a href="#pass-2" class="headerlink" title="pass-2"></a>pass-2</h2><p>抓包修改Content Type<br><img src="/../../img/upload-labs/pass-2.1.png" alt="试试图片" loading="lazy"></p>
+<h2 id="pass-3"><a href="#pass-3" class="headerlink" title="pass-3"></a>pass-3</h2><p>后缀修改为php3,phtml,php5等，<br>如果apache没有设置这些后缀的解析，蚁剑连不上。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$deny_ext</span> = <span class="keyword">array</span>(<span class="string">&#x27;.asp&#x27;</span>,<span class="string">&#x27;.aspx&#x27;</span>,<span class="string">&#x27;.php&#x27;</span>,<span class="string">&#x27;.jsp&#x27;</span>);</span><br><span class="line"><span class="variable">$file_name</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$_FILES</span>[<span class="string">&#x27;upload_file&#x27;</span>][<span class="string">&#x27;name&#x27;</span>]);</span><br><span class="line"><span class="comment">//删除文件名末尾的点</span></span><br><span class="line"><span class="variable">$file_name</span> = <span class="title function_ invoke__">deldot</span>(<span class="variable">$file_name</span>);     <span class="comment">//3.php  .</span></span><br><span class="line"><span class="comment">//返回最后出现的.以及之后所有字符</span></span><br><span class="line"><span class="variable">$file_ext</span> = <span class="title function_ invoke__">strrchr</span>(<span class="variable">$file_name</span>, <span class="string">&#x27;.&#x27;</span>);<span class="comment">//.php  </span></span><br><span class="line"><span class="comment">//转换为小写</span></span><br><span class="line"><span class="variable">$file_ext</span> = <span class="title function_ invoke__">strtolower</span>(<span class="variable">$file_ext</span>);   <span class="comment">//.php  </span></span><br><span class="line"><span class="comment">//去除字符串::$DATA</span></span><br><span class="line"><span class="variable">$file_ext</span> = <span class="title function_ invoke__">str_ireplace</span>(<span class="string">&#x27;::$DATA&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="variable">$file_ext</span>);</span><br><span class="line"><span class="comment">//收尾去空</span></span><br><span class="line"><span class="variable">$file_ext</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$file_ext</span>);         <span class="comment">//.php  </span></span><br></pre></td></tr></table></figure>
+
+<h2 id="pass-4"><a href="#pass-4" class="headerlink" title="pass-4"></a>pass-4</h2><p>和第三关比，过滤了，但文件名不会被改变,</p>
+<ul>
+<li>前提windows环境<br>可以用04.php. .绕过,经过滤<br>后缀名为.<br>文件名为04.php<br>win去除04.php.最后的点。  </li>
+<li>前提apach 配置允许使用.htaccess<br>如果 httpd.conf里设置了AllowOverride All<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Directory</span> /&gt;</span></span><br><span class="line">Options FollowSymLinks</span><br><span class="line">AllowOverride All</span><br><span class="line"><span class="tag">&lt;/<span class="name">Directory</span>&gt;</span></span><br></pre></td></tr></table></figure>
+可以上传04.htaccess<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;FilesMatch &quot;11.gif&quot;&gt;</span><br><span class="line">  SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
+04.htaccess的同级文件和子目录下的11.gif将视为php解析</li>
+</ul>
+]]></content>
+      <categories>
+        <category>upload</category>
+      </categories>
+      <tags>
+        <tag>upload</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>二叉数非递归遍历记录</title>
     <url>/2024/11/08/%E5%AD%A6/%E4%BA%8C%E5%8F%89%E6%95%B0%E9%9D%9E%E9%80%92%E5%BD%92%E9%81%8D%E5%8E%86/</url>
     <content><![CDATA[<p><del>现在才会好像有点晚了</del>-_-<br> <span id="more"></span></p>
@@ -552,61 +589,6 @@ Your Password:3
       </tags>
   </entry>
   <entry>
-    <title>虚拟机安装ubuntu22.04</title>
-    <url>/2024/10/08/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/vmware/</url>
-    <content><![CDATA[<h4 id="win10下-虚拟机安装ubuntu22-04"><a href="#win10下-虚拟机安装ubuntu22-04" class="headerlink" title="win10下 虚拟机安装ubuntu22.04"></a>win10下 虚拟机安装ubuntu22.04</h4> <span id="more"></span>
-<p>下载vmware<a href="softwareupdate.vmware.com/cds/vmw-desktop/ws">下载</a></p>
-<ul>
-<li>打开vm17安装包安装</li>
-<li>选择个人版，添加虚拟机，选自定义，选择ubuntu.....iso</li>
-<li>由于vm强制简易安装 ，创建完成后要先退出安装，再安装以便设置中文</li>
-</ul>
-<h3 id="安装完成，菜单里-虚拟机-拍摄快照"><a href="#安装完成，菜单里-虚拟机-拍摄快照" class="headerlink" title="安装完成，菜单里-虚拟机-拍摄快照"></a>安装完成，菜单里-虚拟机-拍摄快照</h3>]]></content>
-      <categories>
-        <category>环境</category>
-      </categories>
-      <tags>
-        <tag>虚拟机</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>upload-labs-1到5</title>
-    <url>/2024/12/07/upload-labs/upload-labs-1_5/</url>
-    <content><![CDATA[<h2 id="搭建upload-labs"><a href="#搭建upload-labs" class="headerlink" title="搭建upload-labs"></a>搭建upload-labs</h2><p>kali下使用docker搭建</p>
-<ul>
-<li>安装docker<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update&amp;&amp;<span class="built_in">sudo</span> apt upgrade -y</span><br><span class="line"><span class="built_in">sudo</span> apt install docker.io</span><br><span class="line">service docker start</span><br></pre></td></tr></table></figure></li>
-<li>拉取镜像并在80端口启动<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull c0ny1/upload-labs</span><br><span class="line"><span class="built_in">sudo</span> docker images</span><br><span class="line"><span class="built_in">sudo</span> docker run -d -p 80:80 c0ny1/upload-labs </span><br><span class="line"><span class="comment">#没有upload文件，手动创建并授权</span></span><br><span class="line"><span class="built_in">sudo</span> docker ps</span><br><span class="line"><span class="built_in">sudo</span> docker <span class="built_in">exec</span> -it &#123;upload-labs 的 CONTAINER ID&#125; /bin/bash</span><br><span class="line"><span class="built_in">mkdir</span> upload</span><br><span class="line"><span class="built_in">chmod</span> 777 upload</span><br></pre></td></tr></table></figure></li>
-<li>查看运行中的镜像，选择并关闭<figure class="highlight zsh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker ps</span><br><span class="line"><span class="built_in">sudo</span> docker stop &#123;CONTAINER ID&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="pass-1"><a href="#pass-1" class="headerlink" title="pass-1"></a>pass-1</h2><p>第一关使用储存在前端的js过滤文件，直接审查元素改js脚本不起作用。<br>因为浏览器已经加载脚本到内存中了，需要抓包修改响应，<del>或添加覆盖脚本</del></p>
-<h4 id="抓包修改响应"><a href="#抓包修改响应" class="headerlink" title="抓包修改响应"></a>抓包修改响应</h4><p>brup suit 开启抓包 intercept on，<br>刷新页面，抓到的请求后，点action-&gt;do intercept-&gt; response to this resquest<br><img src="/../../img/upload-labs/1.1.png" alt="试试图片" loading="lazy"><br>新版直接右键抓到的条目-&gt;do intercept-&gt;...<br>forward 抓到响应包，修改js，再forward</p>
-<h4 id="尝试"><a href="#尝试" class="headerlink" title="尝试"></a>尝试</h4><p>php添加不了覆盖脚本，试试暴力猴添加用户脚本删除dom tree</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementsByTagName</span>(<span class="string">&#x27;script&#x27;</span>)[<span class="number">5</span>].<span class="title function_">remove</span>()</span><br></pre></td></tr></table></figure>
-<p>然而并不行。</p>
-<ul>
-<li>onsubmit属性在return false时不提交请求<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">form enctype=&quot;multipart/form-data&quot; method=&quot;post&quot; onsubmit=&quot;return checkFile()&quot;&gt;</span><br></pre></td></tr></table></figure>
-onsubmit&#x3D;&quot;return checkFile()&quot;改为onsubmit&#x3D;&quot;return true&quot;</li>
-</ul>
-<h2 id="pass-2"><a href="#pass-2" class="headerlink" title="pass-2"></a>pass-2</h2><p>抓包修改Content Type<br><img src="/../../img/upload-labs/pass-2.1.png" alt="试试图片" loading="lazy"></p>
-<h2 id="pass-3"><a href="#pass-3" class="headerlink" title="pass-3"></a>pass-3</h2><p>后缀修改为php3,phtml,php5等，<br>如果apache没有设置这些后缀的解析，蚁剑连不上。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$deny_ext</span> = <span class="keyword">array</span>(<span class="string">&#x27;.asp&#x27;</span>,<span class="string">&#x27;.aspx&#x27;</span>,<span class="string">&#x27;.php&#x27;</span>,<span class="string">&#x27;.jsp&#x27;</span>);</span><br><span class="line"><span class="variable">$file_name</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$_FILES</span>[<span class="string">&#x27;upload_file&#x27;</span>][<span class="string">&#x27;name&#x27;</span>]);</span><br><span class="line"><span class="comment">//删除文件名末尾的点</span></span><br><span class="line"><span class="variable">$file_name</span> = <span class="title function_ invoke__">deldot</span>(<span class="variable">$file_name</span>);     <span class="comment">//3.php  .</span></span><br><span class="line"><span class="comment">//返回最后出现的.以及之后所有字符</span></span><br><span class="line"><span class="variable">$file_ext</span> = <span class="title function_ invoke__">strrchr</span>(<span class="variable">$file_name</span>, <span class="string">&#x27;.&#x27;</span>);<span class="comment">//.php  </span></span><br><span class="line"><span class="comment">//转换为小写</span></span><br><span class="line"><span class="variable">$file_ext</span> = <span class="title function_ invoke__">strtolower</span>(<span class="variable">$file_ext</span>);   <span class="comment">//.php  </span></span><br><span class="line"><span class="comment">//去除字符串::$DATA</span></span><br><span class="line"><span class="variable">$file_ext</span> = <span class="title function_ invoke__">str_ireplace</span>(<span class="string">&#x27;::$DATA&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="variable">$file_ext</span>);</span><br><span class="line"><span class="comment">//收尾去空</span></span><br><span class="line"><span class="variable">$file_ext</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$file_ext</span>);         <span class="comment">//.php  </span></span><br></pre></td></tr></table></figure>
-
-<h2 id="pass-4"><a href="#pass-4" class="headerlink" title="pass-4"></a>pass-4</h2><p>和第三关比，过滤了，但文件名不会被改变,</p>
-<ul>
-<li>前提windows环境<br>可以用04.php. .绕过,经过滤<br>后缀名为.<br>文件名为04.php<br>win去除04.php.最后的点。  </li>
-<li>前提apach 配置允许使用.htaccess<br>如果 httpd.conf里设置了AllowOverride All<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Directory</span> /&gt;</span></span><br><span class="line">Options FollowSymLinks</span><br><span class="line">AllowOverride All</span><br><span class="line"><span class="tag">&lt;/<span class="name">Directory</span>&gt;</span></span><br></pre></td></tr></table></figure>
-可以上传04.htaccess<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;FilesMatch &quot;11.gif&quot;&gt;</span><br><span class="line">  SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
-04.htaccess的同级文件和子目录下的11.gif将视为php解析</li>
-</ul>
-]]></content>
-      <categories>
-        <category>upload</category>
-      </categories>
-      <tags>
-        <tag>upload</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>db</title>
     <url>/2024/10/13/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/dabian/</url>
     <content><![CDATA[<p>1<br> <span id="more"></span></p>
@@ -625,6 +607,24 @@ onsubmit&#x3D;&quot;return checkFile()&quot;改为onsubmit&#x3D;&quot;return tru
       </categories>
       <tags>
         <tag>deb</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>虚拟机安装ubuntu22.04</title>
+    <url>/2024/10/08/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/vmware/</url>
+    <content><![CDATA[<h4 id="win10下-虚拟机安装ubuntu22-04"><a href="#win10下-虚拟机安装ubuntu22-04" class="headerlink" title="win10下 虚拟机安装ubuntu22.04"></a>win10下 虚拟机安装ubuntu22.04</h4> <span id="more"></span>
+<p>下载vmware<a href="softwareupdate.vmware.com/cds/vmw-desktop/ws">下载</a></p>
+<ul>
+<li>打开vm17安装包安装</li>
+<li>选择个人版，添加虚拟机，选自定义，选择ubuntu.....iso</li>
+<li>由于vm强制简易安装 ，创建完成后要先退出安装，再安装以便设置中文</li>
+</ul>
+<h3 id="安装完成，菜单里-虚拟机-拍摄快照"><a href="#安装完成，菜单里-虚拟机-拍摄快照" class="headerlink" title="安装完成，菜单里-虚拟机-拍摄快照"></a>安装完成，菜单里-虚拟机-拍摄快照</h3>]]></content>
+      <categories>
+        <category>环境</category>
+      </categories>
+      <tags>
+        <tag>虚拟机</tag>
       </tags>
   </entry>
   <entry>
