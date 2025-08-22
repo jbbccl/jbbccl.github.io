@@ -1,0 +1,2 @@
+jpegoptim -m50 hexo-neat/1.jpg --dest new
+convert * *.jpg
